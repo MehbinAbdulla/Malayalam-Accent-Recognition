@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accent Recognition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nova+Square&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@100..800&family=Nova+Square&display=swap');
+
+*{
+  padding: 0;
+  margin: 0;
+  color: white;
+  font-family: "Anek Latin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+body, html{
+  height: 100%;
+}
+
+.header{
+  max-width: 50vw;
+  margin-right: 15vw;
+}
+
+.title{
+  text-align: left;
+  font-size: 40px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.title-2{
+  font-weight: 600;
+}
+
+body {
+    background-image: url('https://images.unsplash.com/photo-1709625862266-014ef072fd93?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    backdrop-filter: blur(16px) saturate(163%);
+    -webkit-backdrop-filter: blur(16px) saturate(163%);
+    background-color: rgba(12, 16, 11, 0.5);
+    border-radius: 12px;
+    border: .5px solid rgba(255, 255, 255, .05);
+    width: 250px;
+    padding: 30px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+button[type="submit"]{
+  background: lightgrey;
+  color: #000;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  width: 100%;
+  border:1px solid lightgrey;
+}
+
+button[type="submit"]:hover{
+  border: 1px solid white;
+  background: rgba(0,0,0,0.4);
+  color:white;
+}
+
+input[type="file"]{
+  display: none;
+}
+
+#filename{
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.upload{
+  border: solid 1px;
+  border-radius: 5px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  height: 18px;
+  overflow: hidden;
+}
+
+.upload:hover{
+  background: #484848A3;
+}
+
+.info{
+  color: lightgrey;
+  font-size: 14px;
+
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.card {
+  animation: 1s ease-out 0s 1 slideInFromRight;
+}
+
+.header {
+  animation: 1s ease-out 0s 1 slideInFromLeft;
+}
+
+@media (max-width: 750px) {
+  body {
+    display: grid;
+    align-content: center;
+    place-items: center;
+    grid-gap: 50px;
+  }
+
+  .header{
+    min-width: 70vw;
+    margin: 0;
+
+  }
+
+  .title{
+    font-size: 35px;
+  }
+
+  .card{
+    min-width: 60vw;
+  }
+}
+    </style>
+    <script>
+      function display() {
+      const fileInput = document.getElementById('audio');
+      const fileNameDisplay = document.getElementById('filename');
+      fileNameDisplay.value = fileInput.files[0].name;
+      fileNameDisplay.textContent = fileInput.files[0].name;
+      }
+
+
+    function checkWav(){
+      let filename = document.getElementById('filename').value;
+      let format = filename.slice(-4);
+      if(format.toLowerCase()==".wav"){
+
+
+      }else{
+
+
+      }
+    }
+  </script>
+</head>
+<div class="header">
+  <h1 class="title">Malayalam <br />Speech Recognition</h1>
+  <h2 class="desc">Based On Region Specific <br>Accents In Kerala</h2>
+
+</div>
+<div class="card">
+  <h2 class="title-2">Prediction</h2><br>
+    <p>Input file:</p>
+    <h2 class="desc">{{audio}}</h2><br>
+    <p>You are speaking in</p>
+  <h2 class="title">{{accent}}</h2>
+  <p class="info">
+      Your voice is {{prob_kkd}}% similar to Kozhikode slang and {{prob_tsr}}% to Thrissur Slag
+  </p> <br>
+  <form action="/nav" enctype="multipart/form-data">
+      <button type="submit">Check New</button>
+  </form>
+</div>
+</body>
+</html>

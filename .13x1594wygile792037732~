@@ -1,0 +1,24 @@
+
+import os
+from train import *
+
+if os.path.exists('train/trained_accent_model.pkl'):
+    model_path = 'train/trained_accent_model.pkl'
+    model = joblib.load(model_path)
+
+else:
+    train_model()
+    model_path = 'train/trained_accent_model.pkl'
+    model = joblib.load(model_path)
+
+new_audio_path = 'Track-01.wav'
+new_audio_features = extract_features(new_audio_path)
+new_audio_features_reshaped = new_audio_features.reshape(1, -1)
+
+predicted_probabilities = model.predict_proba(new_audio_features_reshaped)
+print(predicted_probabilities)
+prob = predicted_probabilities[0]
+print(prob[1])
+predicted_accent = model.predict(new_audio_features_reshaped)[0]
+accent_label = 'Kozhikode Slang' if predicted_accent == 0 else 'Trissur Slang'
+print(f'Predicted Accent: {accent_label}')

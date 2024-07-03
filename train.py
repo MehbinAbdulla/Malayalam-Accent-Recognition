@@ -1,0 +1,105 @@
+import joblib
+import librosa
+import librosa.feature as lf
+import numpy as np
+import os
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
+
+# Function to extract features (MFCCs) from an audio file
+def extract_features(file_path):
+    try:
+        audio_data, sr = librosa.load(file_path, sr=None)  # Load audio file
+        mfccs = lf.mfcc(y=audio_data, sr=sr, n_mfcc=13)  # Extract MFCCs
+        mean_mfccs = np.mean(mfccs, axis=1)  # Take the mean of MFCCs as features
+        return mean_mfccs
+    except Exception as e:
+        print(f"Error processing {file_path}: {str(e)}")
+        return np.zeros(13)
+
+
+# Function to load and preprocess the dataset
+def load_and_preprocess_dataset(dataset_path):
+    data = pd.read_csv(dataset_path)
+
+    # Assuming the dataset is in CSV format with 'File' and 'Accent' columns
+
+    # Drop rows with missing values
+    data = data.dropna()
+
+    # Extract features from audio files
+    data['Features'] = data['File'].apply(extract_features)
+
+    # Remove rows with failed feature extraction
+    data = data.dropna(subset=['Features'])
+
+    # Split the data into features (X) and labels (y)
+    X = np.array(data['Features'].tolist())
+    y = np.array(data['Accent'])
+
+    return X, y
+
+
+# Load and preprocess the dataset
+def load_csv():
+    audio_folder_native = 'audio_kkd'
+    audio_folder_non_native = 'audio_tsr'
+
+    file_paths_native = [
+        os.path.join(audio_folder_native, file)
+        for file in os.listdir(audio_folder_native) if file.endswith('.wav')
+    ]
+    file_paths_non_native = [
+        os.path.join(audio_folder_non_native, file)
+        for file in os.listdir(audio_folder_non_native) if file.endswith('.wav')
+    ]
+
+    native_data = {
+        'File': file_paths_native,
+        'Accent': [0] * len(file_paths_native)
+    }
+    non_native_data = {
+        'File': file_paths_non_native,
+        'Accent': [1] * len(file_paths_non_native)
+    }
+
+    df_native = pd.DataFrame(native_data)
+    df_non_native = pd.DataFrame(non_native_data)
+
+    df = pd.concat([df_native, df_non_native], ignore_index=True).sample(frac=1, random_state=2)
+    df.to_csv('train/accent_dataset.csv', index=False)
+
+
+def train_model():
+    if not os.path.exists('train/accent_dataset.csv'):
+        load_csv()
+    dataset_path = 'train/accent_dataset.csv'
+
+    X, y = load_and_preprocess_dataset(dataset_path)
+
+    # Split the dataset into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    print(X_train.shape)
+    print(X_test.shape)
+
+    # Initialize the RandomForestClassifier
+    model = RandomForestClassifier(random_state=42)
+
+    # Train the model
+    model.fit(X_train, y_train)
+
+    # Make predictions on the test set
+    predictions = model.predict(X_test)
+
+    # Evaluate the accuracy of the model
+    accuracy = accuracy_score(y_test, predictions)
+    print(f'Accuracy: {accuracy:.2f}')
+
+    # Save the trained model to a .pkl file
+    model_filename = 'train/trained_accent_model.pkl'
+    joblib.dump(model, model_filename)
+    print(f'Model saved to {model_filename}')

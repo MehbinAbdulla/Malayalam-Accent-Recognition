@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accent Recognition</title>
+  <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nova+Square&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@100..800&family=Nova+Square&display=swap');
+
+*{
+  padding: 0;
+  margin: 0;
+  color: white;
+  font-family: "Anek Latin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+body, html{
+  height: 100%;
+}
+
+.header{
+  max-width: 50vw;
+  margin-right: 15vw;
+}
+
+.title{
+  text-align: left;
+  font-size: 40px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.title-2{
+  font-weight: 600;
+}
+
+body {
+    background-image: url('https://images.unsplash.com/photo-1709625862266-014ef072fd93?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    backdrop-filter: blur(16px) saturate(163%);
+    -webkit-backdrop-filter: blur(16px) saturate(163%);
+    background-color: rgba(12, 16, 11, 0.5);
+    border-radius: 12px;
+    border: .5px solid rgba(255, 255, 255, .05);
+    width: 250px;
+    padding: 30px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+button[type="submit"]{
+  background: lightgrey;
+  color: #000;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  width: 100%;
+  border:1px solid lightgrey;
+}
+
+button[type="submit"]:hover{
+  border: 1px solid white;
+  background: rgba(0,0,0,0.4);
+  color:white;
+}
+
+input[type="file"]{
+  display: none;
+}
+
+#filename{
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.upload{
+  border: solid 1px;
+  border-radius: 5px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  height: 18px;
+  overflow: hidden;
+}
+
+.upload:hover{
+  background: #484848A3;
+}
+
+.info{
+  color: lightgrey;
+  font-size: 14px;
+  margin-top: 2px;
+
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.card {
+  animation: 1s ease-out 0s 1 slideInFromRight;
+}
+
+.header {
+  animation: 1s ease-out 0s 1 slideInFromLeft;
+}
+
+@media (max-width: 750px) {
+  body {
+    display: grid;
+    align-content: center;
+    place-items: center;
+    grid-gap: 50px;
+  }
+
+  .header{
+    min-width: 70vw;
+    margin: 0;
+
+  }
+
+  .title{
+    font-size: 35px;
+  }
+
+  .card{
+    min-width: 60vw;
+  }
+}
+    </style>
+  <script>
+
+
+    function display() {
+      const fileInput = document.getElementById('audio');
+      const fileNameDisplay = document.getElementById('filename');
+      fileNameDisplay.value = fileInput.files[0].name;
+      fileNameDisplay.textContent = fileInput.files[0].name;
+      let filename = document.getElementById('filename').value;
+      let borderUpload = document.getElementById('upload').style;
+      let checkBtn = document.getElementById('check-btn').style;
+      let info = document.getElementById('info').style;
+      let format = filename.slice(-4);
+      if(format.toLowerCase()==".wav"){
+        borderUpload.border="1px solid white"
+        checkBtn.opacity="1"
+        info.color="lightgrey"
+      }else{
+        borderUpload.border="1px solid red"
+        checkBtn.opacity="0.5"
+        info.color="red"
+      }
+    }
+
+
+    function checkWav(){
+      let filename = document.getElementById('filename').value;
+      let format = filename.slice(-4);
+      if(format.toLowerCase()==".wav"){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  </script>
+</head>
+<body>
+<div class="header">
+  <h1 class="title">Malayalam <br />Speech Recognition</h1>
+  <h2 id="desc">Based On Region Specific <br>Accents In Kerala</h2>
+
+</div>
+<div class="card">
+  <h2 class="title-2">Upload An Audio</h2><br>
+  <p>
+    To predict your accent,<br>
+    upload an audio clip of your speech
+  </p>
+  <p id="info" class="info">
+     ⓘ Audio clip should be in .wav format
+  </p> <br>
+  <label for="audio">
+    <div id="upload" class="upload">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
+      </svg>
+      &nbsp; &nbsp;
+      <p id="filename">Choose Audio</p>
+    </div>
+  </label>
+  <form onsubmit="return checkWav()" method="post" action="/predict" enctype="multipart/form-data">
+    <input type="file" name="audio_file" id="audio" accept=".wav" onchange="display()" required> <br>
+      <button id="check-btn" type="submit" onclick="checkWav()">Predict</button>
+  </form>
+</div>
+</body>
+</html>
