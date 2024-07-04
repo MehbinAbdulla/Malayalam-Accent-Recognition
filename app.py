@@ -14,17 +14,14 @@ def predict_accent():
   audio_file = request.files['audio_file']
 
   if audio_file:
-    result=["null"]
-    if audio_file.filename is None:           
+    if audio_file.filename is not None:
+      save_path = os.path.join("uploads", audio_file.filename)
+      audio_file.save(save_path)
+    else:
       # Handle the case when filename is None
       return jsonify({"error": "Filename is None"})
-      
-    save_path = os.path.join("uploads", audio_file.filename)
-    audio_file.save(save_path)
-    result = predict_accent_function(save_path)    
-    return render_template('result.html',accent=result[0], prob_kkd=result[1]*100, prob_tsr=result[2]*100, audio=audio_file.filename)
-  else:
-    return render_template('result.html',accent="No Results Found", prob_kkd="0", prob_tsr="0", audio=audio_file.filename)
+  result = predict_accent_function(save_path)
+  return render_template('result.html',accent=result[0], prob_kkd=result[1]*100, prob_tsr=result[2]*100, audio=audio_file.filename)
 
 @app.route('/nav')
 def navigate():

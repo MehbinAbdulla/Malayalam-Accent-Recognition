@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Accent Recognition</title>
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accent Recognition</title>
+  <style>
         @import url('https://fonts.googleapis.com/css2?family=Nova+Square&display=swap');
 
 @import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@100..800&family=Nova+Square&display=swap');
@@ -74,7 +75,7 @@ button[type="submit"]{
   border:1px solid lightgrey;
 }
 
-button[type="submit"]:hover{
+button[type="submit"]:active{
   border: 1px solid white;
   background: rgba(0,0,0,0.4);
   color:white;
@@ -101,13 +102,14 @@ input[type="file"]{
   overflow: hidden;
 }
 
-.upload:hover{
+.upload:active{
   background: #484848A3;
 }
 
 .info{
   color: lightgrey;
   font-size: 14px;
+  margin-top: 2px;
 
 }
 
@@ -159,46 +161,60 @@ input[type="file"]{
     min-width: 60vw;
   }
 }
-    </style>
-    <script>
-      function display() {
+  </style>
+  <script>
+
+
+    function display() {
       const fileInput = document.getElementById('audio');
       const fileNameDisplay = document.getElementById('filename');
       fileNameDisplay.value = fileInput.files[0].name;
       fileNameDisplay.textContent = fileInput.files[0].name;
+      let filename = document.getElementById('filename').value;
+      let borderUpload = document.getElementById('upload').style;
+      let checkBtn = document.getElementById('check-btn').style;
+      let info = document.getElementById('info').style;
+      let format = filename.slice(-4);
+      if(format.toLowerCase()==".wav"){
+        borderUpload.border="1px solid white"
+        checkBtn.opacity="1"
+        info.color="lightgrey"
+      }else{
+        borderUpload.border="1px solid red"
+        checkBtn.opacity="0.5"
+        info.color="red"
       }
+    }
 
 
     function checkWav(){
       let filename = document.getElementById('filename').value;
       let format = filename.slice(-4);
       if(format.toLowerCase()==".wav"){
-
-
+        return true;
       }else{
-
-
+        return false;
       }
     }
   </script>
 </head>
+<body>
 <div class="header">
   <h1 class="title">Malayalam <br />Speech Recognition</h1>
-  <h2 class="desc">Based On Region Specific <br>Accents In Kerala</h2>
-
+  <h2 id="desc">Based On Region Specific <br>Accents In Kerala</h2>
 </div>
-<div class="card">
-  <h2 class="title-2">Prediction</h2><br>
-    <p>Input file:</p>
-    <h2 class="desc">{{audio}}</h2><br>
-    <p>You are speaking in</p>
-  <h2 class="title">{{accent}}</h2>
-  <p class="info">
-      Your voice is {{prob_kkd}}% similar to Kozhikode slang and {{prob_tsr}}% to Thrissur Slag
-  </p> <br>
-  <form action="/nav" enctype="multipart/form-data">
-      <button type="submit">Check New</button>
-  </form>
-</div>
+  <div class="card">
+    <h2 class="title-2">Prediction</h2><br>
+      <p>Input file:</p>
+      <h2 class="desc">{{audio}}</h2><br>
+      <p>You are speaking in</p>
+    <h2 class="title">{{accent}}</h2>
+    <p class="info">
+        Your voice is {{prob_kkd}}% similar to Kozhikode slang and {{prob_tsr}}% to Thrissur Slag
+    </p> <br>
+    <form action="/nav" enctype="multipart/form-data">
+        <button type="submit">Check New</button>
+    </form>
+  </div>
 </body>
 </html>
